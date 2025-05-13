@@ -22,23 +22,23 @@ html, body {
 
 /* Background color states */
 .green {
-  background-color: #14532d;
-  color: white;
+  background-color: #d4edda;
+  color: #111;
 }
 
 .red {
-  background-color: #7f1d1d;
-  color: white;
-}
-
-.black {
-  background-color: #000000;
-  color: white;
+  background-color: #f8d7da;
+  color: #111;
 }
 
 .white {
   background-color: #ffffff;
-  color: #000000;
+  color: #000;
+}
+
+.black {
+  background-color: #000000;
+  color: #ffffff;
 }
 
 h1 {
@@ -87,7 +87,7 @@ button:disabled {
 }
 
 button:nth-of-type(1) {
-  background-color: #10b981; /* emerald */
+  background-color: #1dd1a1;
   color: white;
 }
 
@@ -147,19 +147,19 @@ button:nth-of-type(3) {
 /* 📊 Scoreboard Section */
 .scoreboard {
   margin-top: 2rem;
-  padding: 1.5rem 1.5rem;
-  background: rgba(31, 41, 55, 0.95); /* dark slate transparent */
+  padding: 1.5rem;
+  background: #f1f5f9;
   border-radius: 1rem;
-  box-shadow: 0 0.4rem 0.8rem rgba(0,0,0,0.3);
+  box-shadow: 0 0.4rem 0.8rem rgba(0,0,0,0.1);
   text-align: center;
   max-width: 400px;
   width: 100%;
-  color: white;
+  color: #1e293b;
 }
 
-.white .scoreboard {
-  background: #f8f9fa;
-  color: #1e272e;
+.black .scoreboard {
+  background: rgba(31, 41, 55, 0.95);
+  color: white;
 }
 
 .scoreboard h2 {
@@ -181,10 +181,10 @@ button:nth-of-type(3) {
   transform: translateX(-50%);
   font-size: 2.5rem;
   font-weight: bold;
-  background: #1e293b;
+  background: #fffbe6;
   padding: 1rem 2rem;
   border-radius: 1rem;
-  color: #facc15;
+  color: #333;
   box-shadow: 0 0 1rem rgba(250, 204, 21, 0.6);
   animation: popBounce 0.8s ease, fadeOut 3s ease forwards;
   z-index: 999;
