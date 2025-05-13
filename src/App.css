@@ -18,18 +18,9 @@ html, body {
   position: relative;
 }
 
-.green {
-  background-color: #38d9a9;
-}
-
-.red {
-  background-color: #ff6b6b;
-}
-
-.black {
-  background-color: #000;
-  color: white;
-}
+.green { background-color: #38d9a9; }
+.red { background-color: #ff6b6b; }
+.black { background-color: #000; color: white; }
 
 h1 {
   font-size: 3rem;
@@ -76,26 +67,14 @@ button:disabled {
   cursor: not-allowed;
 }
 
-/* JOKE button */
-button:nth-of-type(1) {
-  background-color: #1dd1a1;
-  color: white;
-}
-
-/* STROKE button */
-button:nth-of-type(2) {
-  background-color: #ff4757;
-  color: white;
-}
-
-/* RESET button */
+button:nth-of-type(1) { background-color: #1dd1a1; color: white; }
+button:nth-of-type(2) { background-color: #ff4757; color: white; }
 button:nth-of-type(3) {
   background-color: #f1f2f6;
   color: #2f3542;
   box-shadow: 0 0.4rem 0.6rem rgba(0, 0, 0, 0.1);
 }
 
-/* MUTE button */
 .mute-button {
   background-color: #ccc;
   color: #333;
@@ -106,16 +85,13 @@ button:nth-of-type(3) {
   transition: background-color 0.2s ease;
 }
 
-.mute-button:hover {
-  background-color: #bbb;
-}
+.mute-button:hover { background-color: #bbb; }
 
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
-/* 🔊 ECG Flatline Animation */
 .ecg-container {
   width: 80%;
   max-width: 600px;
@@ -134,29 +110,34 @@ button:nth-of-type(3) {
 }
 
 @keyframes scroll-line {
-  0% { transform: translateX(0); }
+  0%   { transform: translateX(0); }
   100% { transform: translateX(-50%); }
 }
 
 /* 📊 Scoreboard Section */
 .scoreboard {
   margin-top: 2rem;
-  padding: 1rem 2rem;
-  background: #f8f9fa;
+  padding: 1.5rem 1.5rem;
+  background: #ffffffee;
   border-radius: 1rem;
-  box-shadow: 0 0.4rem 0.6rem rgba(0,0,0,0.1);
+  box-shadow: 0 0.4rem 0.8rem rgba(0,0,0,0.1);
   text-align: center;
   max-width: 400px;
+  width: 100%;
+  color: #1e272e;
 }
 
 .scoreboard h2 {
   margin-bottom: 0.5rem;
   font-size: 1.8rem;
+  color: #2f3542;
 }
 
 .scoreboard p {
-  margin: 0.3rem 0;
+  margin: 0.4rem 0;
   font-size: 1.2rem;
+  font-weight: bold;
+  color: #333;
 }
 
 /* 🎉 Celebration Pop */
@@ -188,7 +169,6 @@ button:nth-of-type(3) {
   100% { opacity: 0; }
 }
 
-/* 🎊 Confetti animation (basic) */
 .confetti {
   position: absolute;
   top: 0;
@@ -203,7 +183,7 @@ button:nth-of-type(3) {
 }
 
 @keyframes confettiRain {
-  0% { background-position: 0 -100%; opacity: 1; }
+  0%   { background-position: 0 -100%; opacity: 1; }
   100% { background-position: 0 100%; opacity: 0; }
 }
 
@@ -215,13 +195,8 @@ button:nth-of-type(3) {
     overflow-y: auto;
   }
 
-  h1 {
-    font-size: 2.2rem;
-  }
-
-  p {
-    font-size: 1rem;
-  }
+  h1 { font-size: 2.2rem; }
+  p  { font-size: 1rem; }
 
   .buttons {
     flex-direction: column;
