@@ -8,28 +8,35 @@ function App() {
   const [buttonsDisabled, setButtonsDisabled] = useState(false)
   const [showFlatline, setShowFlatline] = useState(false)
   const [showRoutineCelebration, setShowRoutineCelebration] = useState(false)
-  const [muted, setMuted] = useState(() => {
-    return localStorage.getItem('muted') === 'true';
-  })
+  const [muted, setMuted] = useState(() => localStorage.getItem('muted') === 'true')
 
   const [jokeCount, setJokeCount] = useState(0)
   const [strokeCount, setStrokeCount] = useState(0)
   const [strokeOutCount, setStrokeOutCount] = useState(0)
   const [routineCount, setRoutineCount] = useState(0)
 
-  const audioRef = useRef(null)
+  // 🎧 Preload audio refs
+  const flatlineAudio = useRef(new Audio('/flatline.wav'))
+  const warningAudio = useRef(new Audio('/warning.wav'))
+  const successAudio = useRef(new Audio('/success.flac'))
+  const laughterAudio = useRef(new Audio('/laughter.wav'))
 
   useEffect(() => {
     localStorage.setItem('muted', muted)
   }, [muted])
 
-  const playSound = (file) => {
+  useEffect(() => {
+    // Preload all sounds
+    flatlineAudio.current.load()
+    warningAudio.current.load()
+    successAudio.current.load()
+    laughterAudio.current.load()
+  }, [])
+
+  const playSound = (audioRef) => {
     if (muted) return
-    if (audioRef.current) {
-      audioRef.current.pause()
-      audioRef.current.currentTime = 0
-    }
-    audioRef.current = new Audio(file)
+    audioRef.current.pause()
+    audioRef.current.currentTime = 0
     audioRef.current.play()
   }
 
@@ -47,11 +54,11 @@ function App() {
     if (newJokeCount % 3 === 0) {
       setMessage("🎉 New Routine!")
       setRoutineCount(prev => prev + 1)
-      playSound('/laughter.wav')
+      playSound(laughterAudio)
       triggerCelebration()
     } else {
       setMessage("That’s going in the act!")
-      playSound('/success.flac')
+      playSound(successAudio)
     }
 
     setBgColor('#d4edda')
@@ -68,7 +75,7 @@ function App() {
     if (newPressCount < 3) {
       setBgColor('#f8d7da')
       setMessage("Warning! Possible stroke symptoms!")
-      playSound('/warning.wav')
+      playSound(warningAudio)
       if (navigator.vibrate) navigator.vibrate(200)
     }
 
@@ -78,7 +85,7 @@ function App() {
       setButtonsDisabled(true)
       setShowFlatline(true)
       setStrokeOutCount(prev => prev + 1)
-      playSound('/flatline.wav')
+      playSound(flatlineAudio)
       if (navigator.vibrate) navigator.vibrate([300, 100, 300])
 
       setTimeout(() => {
