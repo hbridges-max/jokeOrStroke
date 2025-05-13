@@ -18,22 +18,27 @@ html, body {
   max-width: 100vw;
   transition: background-color 0.3s ease;
   position: relative;
-  color: white; /* Default text color for dark themes */
 }
 
+/* Background color states */
 .green {
-  background-color: #14532d; /* Dark green */
+  background-color: #14532d;
   color: white;
 }
 
 .red {
-  background-color: #7f1d1d; /* Dark red */
+  background-color: #7f1d1d;
   color: white;
 }
 
 .black {
-  background-color: #000;
+  background-color: #000000;
   color: white;
+}
+
+.white {
+  background-color: #ffffff;
+  color: #000000;
 }
 
 h1 {
@@ -82,12 +87,12 @@ button:disabled {
 }
 
 button:nth-of-type(1) {
-  background-color: #10b981; /* Emerald */
+  background-color: #10b981; /* emerald */
   color: white;
 }
 
 button:nth-of-type(2) {
-  background-color: #ef4444; /* Red */
+  background-color: #ef4444;
   color: white;
 }
 
@@ -143,13 +148,18 @@ button:nth-of-type(3) {
 .scoreboard {
   margin-top: 2rem;
   padding: 1.5rem 1.5rem;
-  background: #1f2937; /* Dark slate */
+  background: rgba(31, 41, 55, 0.95); /* dark slate transparent */
   border-radius: 1rem;
-  box-shadow: 0 0.4rem 0.8rem rgba(0,0,0,0.2);
+  box-shadow: 0 0.4rem 0.8rem rgba(0,0,0,0.3);
   text-align: center;
   max-width: 400px;
   width: 100%;
   color: white;
+}
+
+.white .scoreboard {
+  background: #f8f9fa;
+  color: #1e272e;
 }
 
 .scoreboard h2 {
@@ -163,7 +173,7 @@ button:nth-of-type(3) {
   font-weight: bold;
 }
 
-/* 🎉 Routine pop */
+/* 🎉 Routine Pop Celebration */
 .routine-pop {
   position: absolute;
   top: 20%;

@@ -15,7 +15,7 @@ function App() {
   const [strokeOutCount, setStrokeOutCount] = useState(0)
   const [routineCount, setRoutineCount] = useState(0)
 
-  // 🎧 Preload audio refs
+  // Preload audio files
   const flatlineAudio = useRef(new Audio('/flatline.wav'))
   const warningAudio = useRef(new Audio('/warning.wav'))
   const successAudio = useRef(new Audio('/success.flac'))
@@ -26,7 +26,6 @@ function App() {
   }, [muted])
 
   useEffect(() => {
-    // Preload all sounds
     flatlineAudio.current.load()
     warningAudio.current.load()
     successAudio.current.load()
@@ -61,7 +60,7 @@ function App() {
       playSound(successAudio)
     }
 
-    setBgColor('#d4edda')
+    setBgColor('green')
     if (navigator.vibrate) navigator.vibrate(100)
   }
 
@@ -73,14 +72,14 @@ function App() {
     setStrokeCount(prev => prev + 1)
 
     if (newPressCount < 3) {
-      setBgColor('#f8d7da')
+      setBgColor('red')
       setMessage("Warning! Possible stroke symptoms!")
       playSound(warningAudio)
       if (navigator.vibrate) navigator.vibrate(200)
     }
 
     if (newPressCount === 3) {
-      setBgColor('#000')
+      setBgColor('black')
       setMessage("🔊 Flatline... Please seek medical help.")
       setButtonsDisabled(true)
       setShowFlatline(true)
@@ -111,7 +110,7 @@ function App() {
   }
 
   return (
-    <div className="app" style={{ backgroundColor: bgColor }}>
+    <div className={`app ${bgColor}`}>
       <h1>Joke or Stroke</h1>
       <p>{message}</p>
 
@@ -143,10 +142,7 @@ function App() {
       )}
 
       {showRoutineCelebration && (
-        <>
-          <div className="routine-pop">🎭 New Routine!</div>
-          <div className="confetti" />
-        </>
+        <div className="routine-pop">🎭 New Routine!</div>
       )}
     </div>
   )
