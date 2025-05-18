@@ -3,15 +3,13 @@ html, body {
   padding: 0;
   height: 100%;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: linear-gradient(to bottom, #fceaff, #ffe0e0, #ffeebd);
-  color: #222;
+  background: linear-gradient(to bottom right, #fceaff, #fdf3f3, #fff3d3);
   overflow-x: hidden;
 }
 
 .app {
   display: flex;
   flex-direction: column;
-  justify-content: start;
   align-items: center;
   text-align: center;
   padding: 2rem 1rem;
@@ -20,35 +18,58 @@ html, body {
 }
 
 h1 {
-  font-size: 3rem;
-  font-weight: 700;
-  color: #222;
-  margin: 1rem 0 0.5rem;
+  font-size: 2.8rem;
+  font-weight: 800;
+  color: #1e1e1e;
+  margin: 0.5rem 0 1rem;
 }
 
 p {
   font-size: 1.2rem;
+  color: #333;
   margin-bottom: 2rem;
 }
 
+/* 🔇 Mute button */
+.mute-button {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 1000;
+  font-size: 2rem;
+  background: rgba(255, 255, 255, 0.6);
+  border: none;
+  border-radius: 1.5rem;
+  padding: 0.4rem 0.8rem;
+  box-shadow: 0 0.4rem 0.6rem rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(6px);
+}
+
+/* 🎤 Emoji icon header */
+.header-icon {
+  font-size: 4rem;
+  margin-bottom: 0.5rem;
+}
+
+/* 📇 Buttons layout */
 .buttons {
   display: flex;
   flex-direction: column;
   gap: 1.2rem;
   width: 100%;
-  max-width: 450px;
+  max-width: 400px;
   margin-bottom: 2rem;
 }
 
 button {
-  font-size: 1.8rem;
-  padding: 1.2rem 2rem;
+  font-size: 1.6rem;
+  font-weight: 700;
+  padding: 1rem 2rem;
   border: none;
-  border-radius: 2rem;
-  font-weight: bold;
+  border-radius: 3rem;
   cursor: pointer;
-  box-shadow: 0 0.4rem 0.6rem rgba(0, 0, 0, 0.2);
-  transition: transform 0.1s ease, background-color 0.2s ease;
+  transition: transform 0.1s ease, box-shadow 0.2s ease;
+  box-shadow: 0 0.5rem 0.9rem rgba(0, 0, 0, 0.1);
 }
 
 button:hover {
@@ -64,103 +85,69 @@ button:disabled {
   cursor: not-allowed;
 }
 
+/* ☀️ Themed buttons */
 button:nth-of-type(1) {
-  background: linear-gradient(to right, #ffd93b, #fca311);
+  background: linear-gradient(to right, #fdd835, #f9a825);
   color: white;
 }
 
 button:nth-of-type(2) {
-  background: linear-gradient(to right, #ff6f61, #d72638);
+  background: linear-gradient(to right, #ef5350, #e53935);
   color: white;
 }
 
 button:nth-of-type(3) {
-  background: #e2e2f4;
-  color: #5e4b8b;
-  font-size: 1.4rem;
+  background: #e0dff8;
+  color: #4527a0;
 }
 
-.mute-button {
-  background: #ddd;
-  font-size: 1.4rem;
-  padding: 0.4rem 1rem;
-  border-radius: 1.2rem;
-  margin-bottom: 1rem;
-  position: fixed;
-  top: 1rem;
-  right: 1rem;
-  z-index: 999;
-}
-
+/* 🧠 Scoreboard */
 .scoreboard {
-  background: rgba(255, 255, 255, 0.6);
+  margin-top: auto;
+  padding: 1.2rem 1.8rem;
+  background: rgba(255, 255, 255, 0.8);
   border-radius: 1.5rem;
-  box-shadow: 0 0.4rem 0.6rem rgba(0, 0, 0, 0.1);
-  padding: 1.5rem 2rem;
-  max-width: 90%;
-  width: 400px;
+  box-shadow: 0 0.3rem 0.6rem rgba(0,0,0,0.1);
   text-align: left;
+  max-width: 400px;
+  width: 100%;
 }
 
 .scoreboard h2 {
-  font-size: 2rem;
-  font-weight: 700;
-  margin-bottom: 1rem;
   text-align: center;
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: #1c1c1c;
 }
 
 .scoreboard p {
   font-size: 1.2rem;
-  margin: 0.6rem 0;
+  margin: 0.4rem 0;
+  color: #333;
 }
 
-.routine-pop {
-  font-size: 2.2rem;
-  font-weight: bold;
-  animation: fadeOut 3s ease forwards;
-  position: absolute;
-  top: 20%;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #fff9c4;
-  padding: 1rem 2rem;
-  border-radius: 1rem;
-  box-shadow: 0 0 1rem rgba(255, 200, 0, 0.4);
-  z-index: 1000;
+/* 🧠 Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes fadeOut {
-  0%, 80% { opacity: 1; }
-  100% { opacity: 0; }
-}
+/* 📱 Mobile improvements */
+@media (max-width: 768px) {
+  .app {
+    padding: 1rem;
+  }
 
-.confetti {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  background: url("data:image/svg+xml,%3Csvg width='10' height='10' viewBox='0 0 10 10' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='5' cy='5' r='5' fill='%23f00'/%3E%3C/svg%3E") repeat;
-  background-size: 10px 10px;
-  animation: confettiRain 2s linear forwards;
-  z-index: 998;
-}
-
-@keyframes confettiRain {
-  0% { background-position: 0 -100%; opacity: 1; }
-  100% { background-position: 0 100%; opacity: 0; }
-}
-
-/* Responsive tweaks */
-@media (max-width: 600px) {
   h1 {
     font-size: 2.2rem;
   }
-  .buttons {
-    gap: 1rem;
+
+  .scoreboard p {
+    font-size: 1.1rem;
   }
-  button {
-    font-size: 1.5rem;
+
+  .mute-button {
+    font-size: 1.8rem;
+    padding: 0.4rem 0.6rem;
   }
 }
