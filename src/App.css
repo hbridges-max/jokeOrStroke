@@ -1,16 +1,10 @@
-# Preparing the updated app.css to fix the layout centering and button jumpiness
-
-from textwrap import dedent
-from pathlib import Path
-
-updated_css = dedent("""
 html, body {
   margin: 0;
   padding: 0;
   height: 100%;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   overflow-x: hidden;
-  background: linear-gradient(180deg, #fce4ec 0%, #fffde7 100%);
+  background: linear-gradient(135deg, #c084fc 0%, #f472b6 50%, #fb7185 100%);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -28,46 +22,80 @@ body {
   padding: 2rem 1rem;
   width: 100%;
   max-width: 500px;
-  transition: background-color 0.3s ease;
   position: relative;
 }
 
+.app-logo {
+  width: 200px;
+  height: 200px;
+  margin-bottom: 2rem;
+  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.15));
+  animation: float 3s ease-in-out infinite;
+}
+
 h1 {
-  font-size: 2.5rem;
-  font-weight: 700;
-  margin-bottom: 0.5rem;
+  font-size: 3.2rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+  color: #1e293b;
+  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background: linear-gradient(to right, #1e293b, #334155);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 p {
-  font-size: 1.25rem;
-  margin: 1rem 0;
+  font-size: 1.6rem;
+  margin: 1rem 0 2.5rem;
+  color: #334155;
   animation: fadeIn 0.5s ease-in-out;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .buttons {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.5rem;
   width: 100%;
   align-items: center;
-  margin-bottom: 2rem;
+  margin-bottom: 3rem;
 }
 
 button {
   width: 90%;
   max-width: 400px;
-  font-size: 1.4rem;
-  padding: 1rem 2rem;
+  font-size: 1.8rem;
+  padding: 1.4rem;
   border: none;
-  border-radius: 2rem;
-  font-weight: bold;
+  border-radius: 3rem;
+  font-weight: 800;
   cursor: pointer;
-  transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+  position: relative;
+  overflow: hidden;
+  letter-spacing: 0.05em;
+}
+
+button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.3), transparent);
+  border-radius: 3rem 3rem 0 0;
+}
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.2);
 }
 
 button:active {
-  transform: scale(0.97);
+  transform: scale(0.97) translateY(2px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
 button:focus {
@@ -77,75 +105,102 @@ button:focus {
 button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+  transform: none;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
 }
 
 /* JOKE button */
 button:nth-of-type(1) {
-  background: linear-gradient(to right, #fdd835, #fbc02d);
+  background: linear-gradient(45deg, #fbbf24, #f59e0b);
   color: white;
 }
 
 /* STROKE button */
 button:nth-of-type(2) {
-  background: linear-gradient(to right, #f44336, #e53935);
+  background: linear-gradient(45deg, #ef4444, #dc2626);
   color: white;
 }
 
 /* RESET button */
 button:nth-of-type(3) {
-  background-color: #e0e0f8;
-  color: #4a148c;
+  display: none;
 }
 
 /* MUTE button */
 .mute-button {
   position: fixed;
-  top: 1rem;
-  right: 1rem;
-  font-size: 1.5rem;
-  background: rgba(255, 255, 255, 0.7);
+  top: 1.5rem;
+  right: 1.5rem;
+  font-size: 1.8rem;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
   border-radius: 1.5rem;
-  padding: 0.5rem 0.8rem;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  padding: 0.6rem 1rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   z-index: 1000;
+  width: auto;
+  max-width: none;
 }
 
-/* Scoreboard */
 .scoreboard {
-  background: rgba(255, 255, 255, 0.9);
-  border-radius: 2rem;
-  padding: 1.5rem;
+  text-align: left;
+  padding: 2.5rem;
   width: 100%;
-  max-width: 500px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  margin-bottom: 2rem;
+  max-width: 400px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(12px);
+  border-radius: 2rem;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .scoreboard h2 {
-  font-size: 1.75rem;
-  margin-bottom: 1rem;
-  font-weight: bold;
+  font-size: 2.2rem;
+  margin-bottom: 1.8rem;
+  color: #1e293b;
+  font-weight: 800;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .scoreboard p {
-  font-size: 1.25rem;
-  margin: 0.5rem 0;
+  font-size: 1.6rem;
+  margin: 1rem 0;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: #1e293b;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
-/* Celebration Pop */
+.sparkle {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.8);
+  animation: sparkle 1.5s linear infinite;
+  pointer-events: none;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+}
+
 .routine-pop {
   position: absolute;
   top: 15%;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 2rem;
+  font-size: 2.4rem;
   font-weight: bold;
-  background: #fffbe6;
-  padding: 1rem 2rem;
-  border-radius: 1rem;
-  box-shadow: 0 0 1rem rgba(255, 200, 0, 0.6);
+  background: rgba(255, 255, 255, 0.95);
+  padding: 1.2rem 2.4rem;
+  border-radius: 1.5rem;
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.15);
   animation: popBounce 0.8s ease, fadeOut 3s ease forwards;
   z-index: 999;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
 }
 
 @keyframes fadeIn {
@@ -153,22 +208,21 @@ button:nth-of-type(3) {
   to { opacity: 1; transform: translateY(0); }
 }
 
+@keyframes sparkle {
+  0% { transform: scale(0) rotate(0deg); opacity: 0; }
+  50% { transform: scale(1) rotate(180deg); opacity: 1; }
+  100% { transform: scale(0) rotate(360deg); opacity: 0; }
+}
+
 @keyframes popBounce {
-  0%   { transform: translateX(-50%) scale(0.3); opacity: 0; }
-  50%  { transform: translateX(-50%) scale(1.1); opacity: 1; }
-  70%  { transform: translateX(-50%) scale(0.95); }
+  0% { transform: translateX(-50%) scale(0.3); opacity: 0; }
+  50% { transform: translateX(-50%) scale(1.1); opacity: 1; }
+  70% { transform: translateX(-50%) scale(0.95); }
   100% { transform: translateX(-50%) scale(1); }
 }
 
 @keyframes fadeOut {
-  0%   { opacity: 1; }
-  80%  { opacity: 1; }
+  0% { opacity: 1; }
+  80% { opacity: 1; }
   100% { opacity: 0; }
 }
-""")
-
-# Save to file
-file_path = "/mnt/data/app.css"
-Path(file_path).write_text(updated_css)
-
-file_path
