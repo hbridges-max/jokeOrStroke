@@ -1,3 +1,62 @@
+/* 🌈 Ensure full layout and background */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow-x: hidden;
+  background: linear-gradient(135deg, #c084fc 0%, #f472b6 50%, #fb7185 100%);
+  background-color: #f472b6; /* fallback solid color */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+body {
+  flex-direction: column;
+}
+
+/* Layout container */
+.app {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 1rem 0.5rem;
+  width: 100%;
+  max-width: 100vw;
+  position: relative;
+  height: 100vh;
+  justify-content: space-between;
+
+  /* 🔁 Ensure background applies here too */
+  background: linear-gradient(135deg, #c084fc 0%, #f472b6 50%, #fb7185 100%);
+  background-color: #f472b6;
+}
+
+/* Greeting and name controls */
+.greeting {
+  font-size: 1rem;
+  color: #1e293b;
+  margin: 0.25rem 0;
+  animation: fadeIn 0.3s ease-in;
+}
+
+.change-name-link {
+  display: block;
+  font-size: 0.85rem;
+  margin-top: 0.3rem;
+  color: #475569;
+  cursor: pointer;
+  text-decoration: underline;
+  transition: color 0.2s ease;
+}
+
+.change-name-link:hover {
+  color: #1e293b;
+}
+
+/* Username modal */
 .username-modal {
   position: fixed;
   top: 0;
@@ -46,23 +105,8 @@
   background-color: #059669;
 }
 
-.greeting {
-  font-size: 1rem;
-  color: #1e293b;
-  margin: 0.25rem 0;
-  animation: fadeIn 0.3s ease-in;
-}
-
-.change-name-link {
-  display: block;
-  font-size: 0.85rem;
-  margin-top: 0.3rem;
-  color: #475569;
-  cursor: pointer;
-  text-decoration: underline;
-  transition: color 0.2s ease;
-}
-
-.change-name-link:hover {
-  color: #1e293b;
+/* Fade-in animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
