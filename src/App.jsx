@@ -10,14 +10,14 @@ function App() {
   const [showRoutineCelebration, setShowRoutineCelebration] = useState(false)
   const [muted, setMuted] = useState(() => localStorage.getItem('muted') === 'true')
 
+  const [name, setName] = useState('')
+  const [nameInput, setNameInput] = useState('')
+  const [hasEnteredName, setHasEnteredName] = useState(false)
+
   const [jokeCount, setJokeCount] = useState(0)
   const [strokeCount, setStrokeCount] = useState(0)
   const [strokeOutCount, setStrokeOutCount] = useState(0)
   const [routineCount, setRoutineCount] = useState(0)
-
-  const [username, setUsername] = useState('')
-  const [showUsernamePrompt, setShowUsernamePrompt] = useState(false)
-  const [inputValue, setInputValue] = useState('')
 
   const flatlineAudio = useRef(new Audio('/flatline.wav'))
   const warningAudio = useRef(new Audio('/warning.wav'))
@@ -27,9 +27,9 @@ function App() {
   useEffect(() => {
     const storedName = localStorage.getItem('username')
     if (storedName) {
-      setUsername(storedName)
-    } else {
-      setShowUsernamePrompt(true)
+      setName(storedName)
+      setHasEnteredName(true)
+      setMessage(`Welcome back, ${storedName}! Press a button to begin.`)
     }
   }, [])
 
@@ -101,7 +101,7 @@ function App() {
         setButtonsDisabled(false)
         setStrokePressCount(0)
         setBgColor('white')
-        setMessage('Press a button to begin.')
+        setMessage(`Welcome back, ${name}! Press a button to begin.`)
         setShowFlatline(false)
       }, 5000)
     }
@@ -111,7 +111,7 @@ function App() {
     if (buttonsDisabled) return
     setStrokePressCount(0)
     setBgColor('white')
-    setMessage('Press a button to begin.')
+    setMessage(`Welcome back, ${name}! Press a button to begin.`)
     setShowFlatline(false)
     setJokeCount(0)
     setStrokeCount(0)
@@ -119,11 +119,12 @@ function App() {
     setRoutineCount(0)
   }
 
-  const handleUsernameSave = () => {
-    if (inputValue.trim()) {
-      localStorage.setItem('username', inputValue.trim())
-      setUsername(inputValue.trim())
-      setShowUsernamePrompt(false)
+  const handleNameSave = () => {
+    if (nameInput.trim()) {
+      localStorage.setItem('username', nameInput.trim())
+      setName(nameInput.trim())
+      setHasEnteredName(true)
+      setMessage(`Welcome, ${nameInput.trim()}! Press a button to begin.`)
     }
   }
 
@@ -135,7 +136,22 @@ function App() {
         className="app-logo"
       />
       <h1>Joke or Stroke</h1>
-      {username && <p>Hello, <strong>{username}</strong> 👋</p>}
+
+      {hasEnteredName && (
+        <div className="greeting">
+          <p>Hello, <strong>{name}</strong> 👋</p>
+          <small 
+            onClick={() => {
+              setHasEnteredName(false)
+              setNameInput(name)
+            }}
+            className="change-name-link"
+          >
+            Change name
+          </small>
+        </div>
+      )}
+
       <p>{message}</p>
 
       <div className="buttons">
@@ -169,17 +185,17 @@ function App() {
         <div className="routine-pop">🎭 New Routine!</div>
       )}
 
-      {showUsernamePrompt && (
+      {!hasEnteredName && (
         <div className="username-modal">
           <div className="username-modal-content">
             <h2>Welcome! What's your name?</h2>
             <input
               type="text"
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
+              value={nameInput}
+              onChange={(e) => setNameInput(e.target.value)}
               placeholder="Enter your name"
             />
-            <button onClick={handleUsernameSave}>Start</button>
+            <button onClick={handleNameSave}>Start</button>
           </div>
         </div>
       )}
