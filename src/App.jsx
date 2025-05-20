@@ -9,15 +9,14 @@ function App() {
   const [showFlatline, setShowFlatline] = useState(false)
   const [showRoutineCelebration, setShowRoutineCelebration] = useState(false)
   const [muted, setMuted] = useState(() => localStorage.getItem('muted') === 'true')
+  const [name, setName] = useState('')
+  const [hasEnteredName, setHasEnteredName] = useState(false)
+  const [nameInput, setNameInput] = useState('')
 
   const [jokeCount, setJokeCount] = useState(0)
   const [strokeCount, setStrokeCount] = useState(0)
   const [strokeOutCount, setStrokeOutCount] = useState(0)
   const [routineCount, setRoutineCount] = useState(0)
-
-  const [name, setName] = useState('')
-  const [nameInput, setNameInput] = useState('')
-  const [hasEnteredName, setHasEnteredName] = useState(false)
 
   const flatlineAudio = useRef(new Audio('/flatline.wav'))
   const warningAudio = useRef(new Audio('/warning.wav'))
@@ -131,7 +130,7 @@ function App() {
   }
 
   return (
-    <div className={`app ${bgColor}`}>
+    <div className="app">
       <img 
         src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Microphone/3D/microphone_3d.png" 
         alt="Microphone" 
