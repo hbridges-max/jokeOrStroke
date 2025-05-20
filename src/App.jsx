@@ -15,11 +15,23 @@ function App() {
   const [strokeOutCount, setStrokeOutCount] = useState(0)
   const [routineCount, setRoutineCount] = useState(0)
 
-  // Preload audio files
+  const [username, setUsername] = useState('')
+  const [showUsernamePrompt, setShowUsernamePrompt] = useState(false)
+  const [inputValue, setInputValue] = useState('')
+
   const flatlineAudio = useRef(new Audio('/flatline.wav'))
   const warningAudio = useRef(new Audio('/warning.wav'))
   const successAudio = useRef(new Audio('/success.flac'))
   const laughterAudio = useRef(new Audio('/laughter.wav'))
+
+  useEffect(() => {
+    const storedName = localStorage.getItem('username')
+    if (storedName) {
+      setUsername(storedName)
+    } else {
+      setShowUsernamePrompt(true)
+    }
+  }, [])
 
   useEffect(() => {
     localStorage.setItem('muted', muted)
@@ -46,7 +58,6 @@ function App() {
 
   const handleJoke = () => {
     if (buttonsDisabled) return
-
     const newJokeCount = jokeCount + 1
     setJokeCount(newJokeCount)
 
@@ -66,7 +77,6 @@ function App() {
 
   const handleStroke = () => {
     if (buttonsDisabled) return
-
     const newPressCount = strokePressCount + 1
     setStrokePressCount(newPressCount)
     setStrokeCount(prev => prev + 1)
@@ -109,6 +119,14 @@ function App() {
     setRoutineCount(0)
   }
 
+  const handleUsernameSave = () => {
+    if (inputValue.trim()) {
+      localStorage.setItem('username', inputValue.trim())
+      setUsername(inputValue.trim())
+      setShowUsernamePrompt(false)
+    }
+  }
+
   return (
     <div className={`app ${bgColor}`}>
       <img 
@@ -117,6 +135,7 @@ function App() {
         className="app-logo"
       />
       <h1>Joke or Stroke</h1>
+      {username && <p>Hello, <strong>{username}</strong> 👋</p>}
       <p>{message}</p>
 
       <div className="buttons">
@@ -150,7 +169,21 @@ function App() {
         <div className="routine-pop">🎭 New Routine!</div>
       )}
 
-      {/* Add sparkles */}
+      {showUsernamePrompt && (
+        <div className="username-modal">
+          <div className="username-modal-content">
+            <h2>Welcome! What's your name?</h2>
+            <input
+              type="text"
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              placeholder="Enter your name"
+            />
+            <button onClick={handleUsernameSave}>Start</button>
+          </div>
+        </div>
+      )}
+
       {[...Array(10)].map((_, i) => (
         <div
           key={i}
