@@ -56,7 +56,7 @@ function App() {
       playSound(laughterAudio)
       triggerCelebration()
     } else {
-      setMessage("That’s going in the act!")
+      setMessage("That's going in the act!")
       playSound(successAudio)
     }
 
@@ -111,6 +111,11 @@ function App() {
 
   return (
     <div className={`app ${bgColor}`}>
+      <img 
+        src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Microphone/3D/microphone_3d.png" 
+        alt="Microphone" 
+        className="app-logo"
+      />
       <h1>Joke or Stroke</h1>
       <p>{message}</p>
 
@@ -118,22 +123,22 @@ function App() {
         <button onClick={handleJoke} disabled={buttonsDisabled}>JOKE</button>
         <button onClick={handleStroke} disabled={buttonsDisabled}>STROKE</button>
         <button onClick={handleReset} disabled={buttonsDisabled}>RESET</button>
-        <button
-          onClick={() => setMuted(prev => !prev)}
-          className="mute-button"
-          title={muted ? "Unmute" : "Mute"}
-        >
-          {muted ? "🔇" : "🔊"}
-        </button>
       </div>
 
       <div className="scoreboard">
         <h2>Score</h2>
-        <p>🤣 Jokes: <strong>{jokeCount}</strong></p>
-        <p>⚠️ Strokes: <strong>{strokeCount}</strong></p>
-        <p>💀 Stroke-outs: <strong>{strokeOutCount}</strong></p>
-        <p>🎭 New Routines: <strong>{routineCount}</strong></p>
+        <p>😂 Jokes: {jokeCount}</p>
+        <p>⚠️ Strokes: {strokeCount}</p>
+        <p>💀 Stroke-outs: {strokeOutCount}</p>
       </div>
+
+      <button
+        onClick={() => setMuted(prev => !prev)}
+        className="mute-button"
+        title={muted ? "Unmute" : "Mute"}
+      >
+        {muted ? "🔇" : "🔊"}
+      </button>
 
       {showFlatline && (
         <div className="ecg-container">
@@ -144,6 +149,19 @@ function App() {
       {showRoutineCelebration && (
         <div className="routine-pop">🎭 New Routine!</div>
       )}
+
+      {/* Add sparkles */}
+      {[...Array(10)].map((_, i) => (
+        <div
+          key={i}
+          className="sparkle"
+          style={{
+            left: `${Math.random() * 100}%`,
+            top: `${Math.random() * 100}%`,
+            animationDelay: `${Math.random() * 2}s`
+          }}
+        />
+      ))}
     </div>
   )
 }
