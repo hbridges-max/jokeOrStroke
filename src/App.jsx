@@ -10,14 +10,14 @@ function App() {
   const [showRoutineCelebration, setShowRoutineCelebration] = useState(false)
   const [muted, setMuted] = useState(() => localStorage.getItem('muted') === 'true')
 
-  const [name, setName] = useState('')
-  const [nameInput, setNameInput] = useState('')
-  const [hasEnteredName, setHasEnteredName] = useState(false)
-
   const [jokeCount, setJokeCount] = useState(0)
   const [strokeCount, setStrokeCount] = useState(0)
   const [strokeOutCount, setStrokeOutCount] = useState(0)
   const [routineCount, setRoutineCount] = useState(0)
+
+  const [name, setName] = useState('')
+  const [nameInput, setNameInput] = useState('')
+  const [hasEnteredName, setHasEnteredName] = useState(false)
 
   const flatlineAudio = useRef(new Audio('/flatline.wav'))
   const warningAudio = useRef(new Audio('/warning.wav'))
@@ -58,6 +58,7 @@ function App() {
 
   const handleJoke = () => {
     if (buttonsDisabled) return
+
     const newJokeCount = jokeCount + 1
     setJokeCount(newJokeCount)
 
@@ -77,6 +78,7 @@ function App() {
 
   const handleStroke = () => {
     if (buttonsDisabled) return
+
     const newPressCount = strokePressCount + 1
     setStrokePressCount(newPressCount)
     setStrokeCount(prev => prev + 1)
@@ -140,12 +142,12 @@ function App() {
       {hasEnteredName && (
         <div className="greeting">
           <p>Hello, <strong>{name}</strong> 👋</p>
-          <small 
+          <small
+            className="change-name-link"
             onClick={() => {
               setHasEnteredName(false)
               setNameInput(name)
             }}
-            className="change-name-link"
           >
             Change name
           </small>
