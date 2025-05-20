@@ -117,7 +117,9 @@ function App() {
         className="app-logo"
       />
       <h1>Joke or Stroke</h1>
-      <p>{message}</p>
+
+      {/* ARIA enhancement */}
+      <p aria-live="polite">{message}</p>
 
       <div className="buttons">
         <button onClick={handleJoke} disabled={buttonsDisabled}>JOKE</button>
@@ -150,7 +152,7 @@ function App() {
         <div className="routine-pop">🎭 New Routine!</div>
       )}
 
-      {/* Add sparkles */}
+      {/* Sparkle animation */}
       {[...Array(10)].map((_, i) => (
         <div
           key={i}
