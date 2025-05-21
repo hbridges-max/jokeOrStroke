@@ -33,13 +33,26 @@ function App() {
     initGlobalSession()
 
     const unsubscribe = listenToSession((session) => {
-      setJokeCount(session.jokes || 0)
-      setStrokeCount(session.strokes || 0)
-      // Optionally: sync flatlined state here
+      const { jokes = 0, strokes = 0 } = session
+
+      const newRoutine = jokes > jokeCount && jokes % 3 === 0
+
+      setJokeCount(jokes)
+      setStrokeCount(strokes)
+
+      if (newRoutine) {
+        setMessage("🎉 New Routine!")
+        setRoutineCount(prev => prev + 1)
+        playSound(laughterAudio)
+        triggerCelebration()
+      } else if (jokes > jokeCount) {
+        setMessage("That's going in the act!")
+        playSound(successAudio)
+      }
     })
 
     return () => unsubscribe()
-  }, [])
+  }, [jokeCount])
 
   useEffect(() => {
     const storedName = localStorage.getItem('username')
@@ -75,19 +88,7 @@ function App() {
 
   const handleJoke = () => {
     if (buttonsDisabled) return
-
-    voteJoke() // 🔥 Shared Firestore update
-
-    if ((jokeCount + 1) % 3 === 0) {
-      setMessage("🎉 New Routine!")
-      setRoutineCount(prev => prev + 1)
-      playSound(laughterAudio)
-      triggerCelebration()
-    } else {
-      setMessage("That's going in the act!")
-      playSound(successAudio)
-    }
-
+    voteJoke()
     setBgColor('green')
     if (navigator.vibrate) navigator.vibrate(100)
   }
@@ -95,7 +96,7 @@ function App() {
   const handleStroke = () => {
     if (buttonsDisabled) return
 
-    voteStroke() // 🔥 Shared Firestore update
+    voteStroke()
 
     const newPressCount = strokePressCount + 1
     setStrokePressCount(newPressCount)
