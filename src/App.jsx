@@ -1,5 +1,11 @@
 import { useState, useRef, useEffect } from 'react'
 import './App.css'
+import {
+  initGlobalSession,
+  voteJoke,
+  voteStroke,
+  listenToSession
+} from './lib/sessionService'
 
 function App() {
   const [bgColor, setBgColor] = useState('white')
@@ -22,6 +28,18 @@ function App() {
   const warningAudio = useRef(new Audio('/warning.wav'))
   const successAudio = useRef(new Audio('/success.flac'))
   const laughterAudio = useRef(new Audio('/laughter.wav'))
+
+  useEffect(() => {
+    initGlobalSession()
+
+    const unsubscribe = listenToSession((session) => {
+      setJokeCount(session.jokes || 0)
+      setStrokeCount(session.strokes || 0)
+      // Optionally: sync flatlined state here
+    })
+
+    return () => unsubscribe()
+  }, [])
 
   useEffect(() => {
     const storedName = localStorage.getItem('username')
@@ -58,10 +76,9 @@ function App() {
   const handleJoke = () => {
     if (buttonsDisabled) return
 
-    const newJokeCount = jokeCount + 1
-    setJokeCount(newJokeCount)
+    voteJoke() // 🔥 Shared Firestore update
 
-    if (newJokeCount % 3 === 0) {
+    if ((jokeCount + 1) % 3 === 0) {
       setMessage("🎉 New Routine!")
       setRoutineCount(prev => prev + 1)
       playSound(laughterAudio)
@@ -78,9 +95,10 @@ function App() {
   const handleStroke = () => {
     if (buttonsDisabled) return
 
+    voteStroke() // 🔥 Shared Firestore update
+
     const newPressCount = strokePressCount + 1
     setStrokePressCount(newPressCount)
-    setStrokeCount(prev => prev + 1)
 
     if (newPressCount < 3) {
       setBgColor('red')
