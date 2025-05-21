@@ -33,26 +33,33 @@ function App() {
     initGlobalSession()
 
     const unsubscribe = listenToSession((session) => {
-      const { jokes = 0, strokes = 0 } = session
+      const {
+        jokes = 0,
+        strokes = 0,
+        lastVotedBy = ''
+      } = session
 
       const newRoutine = jokes > jokeCount && jokes % 3 === 0
+      const wasMyVote = lastVotedBy === name
 
       setJokeCount(jokes)
       setStrokeCount(strokes)
 
-      if (newRoutine) {
-        setMessage("🎉 New Routine!")
-        setRoutineCount(prev => prev + 1)
-        playSound(laughterAudio)
-        triggerCelebration()
-      } else if (jokes > jokeCount) {
-        setMessage("That's going in the act!")
-        playSound(successAudio)
+      if (wasMyVote) {
+        if (newRoutine) {
+          setMessage("🎉 New Routine!")
+          setRoutineCount(prev => prev + 1)
+          playSound(laughterAudio)
+          triggerCelebration()
+        } else if (jokes > jokeCount) {
+          setMessage("That's going in the act!")
+          playSound(successAudio)
+        }
       }
     })
 
     return () => unsubscribe()
-  }, [jokeCount])
+  }, [jokeCount, name])
 
   useEffect(() => {
     const storedName = localStorage.getItem('username')
@@ -88,7 +95,7 @@ function App() {
 
   const handleJoke = () => {
     if (buttonsDisabled) return
-    voteJoke()
+    voteJoke(name)
     setBgColor('green')
     if (navigator.vibrate) navigator.vibrate(100)
   }
@@ -96,7 +103,7 @@ function App() {
   const handleStroke = () => {
     if (buttonsDisabled) return
 
-    voteStroke()
+    voteStroke(name)
 
     const newPressCount = strokePressCount + 1
     setStrokePressCount(newPressCount)
