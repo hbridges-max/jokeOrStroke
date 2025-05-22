@@ -45,3 +45,13 @@ export function startHeartbeat(sessionId, userId) {
     setDoc(playerRef, { lastSeen: serverTimestamp() }, { merge: true });
   }, 20000); // update every 20 seconds
 }
+
+// ✅ Listen for live updates to the main session document (e.g. "global")
+export function listenToSession(callback) {
+  const sessionRef = doc(db, "sessions", "global");
+  return onSnapshot(sessionRef, (docSnapshot) => {
+    if (docSnapshot.exists()) {
+      callback(docSnapshot.data());
+    }
+  });
+}
