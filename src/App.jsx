@@ -4,7 +4,8 @@ import {
   initGlobalSession,
   voteJoke,
   voteStroke,
-  listenToSession
+  listenToSession,
+  resetSession
 } from './lib/sessionService'
 
 function App() {
@@ -45,17 +46,7 @@ function App() {
       setJokeCount(jokes)
       setStrokeCount(strokes)
 
-      if (wasMyVote) {
-        if (newRoutine) {
-          setMessage("🎉 New Routine!")
-          setRoutineCount(prev => prev + 1)
-          playSound(laughterAudio)
-          triggerCelebration()
-        } else if (jokes > jokeCount) {
-          setMessage("That's going in the act!")
-          playSound(successAudio)
-        }
-      }
+      // No more sound playback here — handled in button press
     })
 
     return () => unsubscribe()
@@ -83,9 +74,15 @@ function App() {
 
   const playSound = (audioRef) => {
     if (muted) return
-    audioRef.current.pause()
-    audioRef.current.currentTime = 0
-    audioRef.current.play()
+    try {
+      audioRef.current.pause()
+      audioRef.current.currentTime = 0
+      audioRef.current.play().catch(err => {
+        console.warn('Audio play failed:', err)
+      })
+    } catch (e) {
+      console.error('Sound error:', e)
+    }
   }
 
   const triggerCelebration = () => {
@@ -97,6 +94,14 @@ function App() {
     if (buttonsDisabled) return
     voteJoke(name)
     setBgColor('green')
+    setMessage("That's going in the act!")
+    playSound(successAudio)
+    if ((jokeCount + 1) % 3 === 0) {
+      setMessage("🎉 New Routine!")
+      setRoutineCount(prev => prev + 1)
+      playSound(laughterAudio)
+      triggerCelebration()
+    }
     if (navigator.vibrate) navigator.vibrate(100)
   }
 
@@ -136,12 +141,11 @@ function App() {
 
   const handleReset = () => {
     if (buttonsDisabled) return
+    resetSession()
     setStrokePressCount(0)
     setBgColor('white')
     setMessage(`Welcome back, ${name}! Press a button to begin.`)
     setShowFlatline(false)
-    setJokeCount(0)
-    setStrokeCount(0)
     setStrokeOutCount(0)
     setRoutineCount(0)
   }

@@ -8,10 +8,8 @@ import {
   increment
 } from 'firebase/firestore';
 
-// Reference to the shared session
 const sessionRef = doc(db, 'sessions', 'global');
 
-// 🟢 Create session if it doesn't exist
 export async function initGlobalSession() {
   const sessionSnap = await getDoc(sessionRef);
 
@@ -21,6 +19,7 @@ export async function initGlobalSession() {
       strokes: 0,
       flatlined: false,
       users: {},
+      lastVotedBy: '',
       lastUpdated: new Date().toISOString()
     });
     console.log('🔥 Created new shared session');
@@ -29,23 +28,33 @@ export async function initGlobalSession() {
   }
 }
 
-// ➕ Increment joke count in Firestore
-export async function voteJoke() {
+export async function voteJoke(name) {
   await updateDoc(sessionRef, {
     jokes: increment(1),
+    lastVotedBy: name,
     lastUpdated: new Date().toISOString()
   });
 }
 
-// ➕ Increment stroke count in Firestore
-export async function voteStroke() {
+export async function voteStroke(name) {
   await updateDoc(sessionRef, {
     strokes: increment(1),
+    lastVotedBy: name,
     lastUpdated: new Date().toISOString()
   });
 }
 
-// 🔁 Listen for real-time session changes
+export async function resetSession() {
+  await setDoc(sessionRef, {
+    jokes: 0,
+    strokes: 0,
+    flatlined: false,
+    users: {},
+    lastVotedBy: '',
+    lastUpdated: new Date().toISOString()
+  });
+}
+
 export function listenToSession(callback) {
   return onSnapshot(sessionRef, (docSnap) => {
     if (docSnap.exists()) {
