@@ -9,7 +9,7 @@ import {
   increment,
 } from "firebase/firestore";
 import { ref, set, onDisconnect } from "firebase/database";
-import { db, rtdb } from "./firebase"; // Firestore (db) and Realtime Database (rtdb)
+import { db, rtdb } from "./firebase";
 
 // ✅ Cast a vote for JOKE
 export async function voteJoke(username) {
@@ -49,8 +49,10 @@ export function listenToSession(callback) {
   });
 }
 
-// ✅ Join the session as a player
+// ✅ Join the session as a player (with debug log)
 export async function joinSessionAsPlayer(sessionId, username, userId) {
+  console.log("🧪 joinSessionAsPlayer() called with:", { sessionId, username, userId });
+
   const firestoreRef = doc(db, "sessions", sessionId, "activePlayers", userId);
 
   await setDoc(firestoreRef, {
@@ -60,6 +62,7 @@ export async function joinSessionAsPlayer(sessionId, username, userId) {
 
   const rtdbRef = ref(rtdb, `presence/${sessionId}/${userId}`);
   await set(rtdbRef, true);
+
   onDisconnect(rtdbRef).remove().then(async () => {
     await deleteDoc(firestoreRef).catch(() => {});
   });
@@ -82,5 +85,5 @@ export function startHeartbeat(sessionId, userId) {
   const playerRef = doc(db, "sessions", sessionId, "activePlayers", userId);
   return setInterval(() => {
     setDoc(playerRef, { lastSeen: serverTimestamp() }, { merge: true });
-  }, 20000);
+  }, 20000); // every 20 seconds
 }
