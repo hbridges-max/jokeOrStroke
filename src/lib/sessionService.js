@@ -49,24 +49,23 @@ export function listenToSession(callback) {
   });
 }
 
-// ✅ Join the session as a player (fully includes username + lastSeen)
+// ✅ Join the session as a player (without premature deletion)
 export async function joinSessionAsPlayer(sessionId, username, userId) {
   console.log("🧪 joinSessionAsPlayer() called with:", { sessionId, username, userId });
 
+  // Firestore: store player profile (do NOT auto-delete this on disconnect anymore)
   const firestoreRef = doc(db, "sessions", sessionId, "activePlayers", userId);
-
   await setDoc(firestoreRef, {
     username,
     joinedAt: serverTimestamp(),
-    lastSeen: serverTimestamp(),
-  });
+  }, { merge: true });
 
+  // Realtime Database: use for disconnect detection only
   const rtdbRef = ref(rtdb, `presence/${sessionId}/${userId}`);
   await set(rtdbRef, true);
 
-  onDisconnect(rtdbRef).remove().then(async () => {
-    await deleteDoc(firestoreRef).catch(() => {});
-  });
+  // Clean up only Realtime Database entry on disconnect
+  onDisconnect(rtdbRef).remove();
 }
 
 // ✅ Listen to active player list
