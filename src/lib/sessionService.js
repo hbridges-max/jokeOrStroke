@@ -1,64 +1,47 @@
-import { db } from './firebase';
 import {
   doc,
-  getDoc,
   setDoc,
-  updateDoc,
+  deleteDoc,
   onSnapshot,
-  increment
-} from 'firebase/firestore';
+  collection,
+  serverTimestamp,
+} from "firebase/firestore";
+import { ref, set, onDisconnect } from "firebase/database";
+import { db, rtdb } from "./firebase"; // Firestore (db) and Realtime Database (rtdb)
 
-const sessionRef = doc(db, 'sessions', 'global');
+// Join the session and appear in the activePlayers list
+export async function joinSessionAsPlayer(sessionId, username, userId) {
+  const firestoreRef = doc(db, "sessions", sessionId, "activePlayers", userId);
 
-export async function initGlobalSession() {
-  const sessionSnap = await getDoc(sessionRef);
+  await setDoc(firestoreRef, {
+    username,
+    joinedAt: serverTimestamp(),
+  });
 
-  if (!sessionSnap.exists()) {
-    await setDoc(sessionRef, {
-      jokes: 0,
-      strokes: 0,
-      flatlined: false,
-      users: {},
-      lastVotedBy: '',
-      lastUpdated: new Date().toISOString()
-    });
-    console.log('🔥 Created new shared session');
-  } else {
-    console.log('✅ Shared session already exists');
-  }
-}
-
-export async function voteJoke(name) {
-  await updateDoc(sessionRef, {
-    jokes: increment(1),
-    lastVotedBy: name,
-    lastUpdated: new Date().toISOString()
+  // For presence handling using Realtime Database
+  const rtdbRef = ref(rtdb, `presence/${sessionId}/${userId}`);
+  await set(rtdbRef, true);
+  onDisconnect(rtdbRef).remove().then(async () => {
+    await deleteDoc(firestoreRef).catch(() => {});
   });
 }
 
-export async function voteStroke(name) {
-  await updateDoc(sessionRef, {
-    strokes: increment(1),
-    lastVotedBy: name,
-    lastUpdated: new Date().toISOString()
+// Listen for real-time updates to active players
+export function listenToActivePlayers(sessionId, callback) {
+  const playersRef = collection(db, "sessions", sessionId, "activePlayers");
+  return onSnapshot(playersRef, (snapshot) => {
+    const players = snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    callback(players);
   });
 }
 
-export async function resetSession() {
-  await setDoc(sessionRef, {
-    jokes: 0,
-    strokes: 0,
-    flatlined: false,
-    users: {},
-    lastVotedBy: '',
-    lastUpdated: new Date().toISOString()
-  });
-}
-
-export function listenToSession(callback) {
-  return onSnapshot(sessionRef, (docSnap) => {
-    if (docSnap.exists()) {
-      callback(docSnap.data());
-    }
-  });
+// Periodic heartbeat to update lastSeen timestamp
+export function startHeartbeat(sessionId, userId) {
+  const playerRef = doc(db, "sessions", sessionId, "activePlayers", userId);
+  return setInterval(() => {
+    setDoc(playerRef, { lastSeen: serverTimestamp() }, { merge: true });
+  }, 20000); // update every 20 seconds
 }
