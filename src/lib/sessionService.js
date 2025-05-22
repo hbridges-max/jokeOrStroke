@@ -49,7 +49,7 @@ export function listenToSession(callback) {
   });
 }
 
-// ✅ Join the session as a player (with debug log)
+// ✅ Join the session as a player (fully includes username + lastSeen)
 export async function joinSessionAsPlayer(sessionId, username, userId) {
   console.log("🧪 joinSessionAsPlayer() called with:", { sessionId, username, userId });
 
@@ -58,6 +58,7 @@ export async function joinSessionAsPlayer(sessionId, username, userId) {
   await setDoc(firestoreRef, {
     username,
     joinedAt: serverTimestamp(),
+    lastSeen: serverTimestamp(),
   });
 
   const rtdbRef = ref(rtdb, `presence/${sessionId}/${userId}`);
