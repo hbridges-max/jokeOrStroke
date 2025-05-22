@@ -6,7 +6,8 @@ import {
   voteStroke,
   listenToSession,
   resetSession,
-  joinSessionAsPlayer
+  joinSessionAsPlayer,
+  startHeartbeat
 } from './lib/sessionService'
 import PlayerList from './components/PlayerList'
 
@@ -32,8 +33,8 @@ function App() {
   const successAudio = useRef(new Audio('/success.flac'))
   const laughterAudio = useRef(new Audio('/laughter.wav'))
 
-  const sessionId = 'global' // This should match your Firestore session document ID
-  const userId = `${name}-client` // Basic unique ID; can enhance later with uuid
+  const sessionId = 'global'
+  const userId = `${name}-client`
 
   useEffect(() => {
     initGlobalSession()
@@ -45,13 +46,8 @@ function App() {
         lastVotedBy = ''
       } = session
 
-      const newRoutine = jokes > jokeCount && jokes % 3 === 0
-      const wasMyVote = lastVotedBy === name
-
       setJokeCount(jokes)
       setStrokeCount(strokes)
-
-      // No sound here — handled on button press only
     })
 
     return () => unsubscribe()
@@ -78,9 +74,12 @@ function App() {
   }, [])
 
   useEffect(() => {
+    let heartbeat
     if (name && hasEnteredName) {
       joinSessionAsPlayer(sessionId, name, userId)
+      heartbeat = startHeartbeat(sessionId, userId)
     }
+    return () => clearInterval(heartbeat)
   }, [name, hasEnteredName])
 
   const playSound = (audioRef) => {
