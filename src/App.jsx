@@ -5,8 +5,10 @@ import {
   voteJoke,
   voteStroke,
   listenToSession,
-  resetSession
+  resetSession,
+  joinSessionAsPlayer
 } from './lib/sessionService'
+import PlayerList from './components/PlayerList'
 
 function App() {
   const [bgColor, setBgColor] = useState('white')
@@ -30,6 +32,9 @@ function App() {
   const successAudio = useRef(new Audio('/success.flac'))
   const laughterAudio = useRef(new Audio('/laughter.wav'))
 
+  const sessionId = 'global' // This should match your Firestore session document ID
+  const userId = `${name}-client` // Basic unique ID; can enhance later with uuid
+
   useEffect(() => {
     initGlobalSession()
 
@@ -46,7 +51,7 @@ function App() {
       setJokeCount(jokes)
       setStrokeCount(strokes)
 
-      // No more sound playback here — handled in button press
+      // No sound here — handled on button press only
     })
 
     return () => unsubscribe()
@@ -71,6 +76,12 @@ function App() {
     successAudio.current.load()
     laughterAudio.current.load()
   }, [])
+
+  useEffect(() => {
+    if (name && hasEnteredName) {
+      joinSessionAsPlayer(sessionId, name, userId)
+    }
+  }, [name, hasEnteredName])
 
   const playSound = (audioRef) => {
     if (muted) return
@@ -160,7 +171,7 @@ function App() {
   }
 
   return (
-    <div className="app">
+    <div className="app" style={{ backgroundColor: bgColor }}>
       <img 
         src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Microphone/3D/microphone_3d.png" 
         alt="Microphone" 
@@ -197,6 +208,9 @@ function App() {
         <p>⚠️ Strokes: {strokeCount}</p>
         <p>💀 Stroke-outs: {strokeOutCount}</p>
       </div>
+
+      {/* 🧑‍🤝‍🧑 Active Players List */}
+      <PlayerList sessionId={sessionId} />
 
       <button
         onClick={() => setMuted(prev => !prev)}
