@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import './App.css'
 import {
-  initGlobalSession,
   voteJoke,
   voteStroke,
   listenToSession,
@@ -37,8 +36,6 @@ function App() {
   const userId = `${name}-client`
 
   useEffect(() => {
-    initGlobalSession()
-
     const unsubscribe = listenToSession((session) => {
       const {
         jokes = 0,
